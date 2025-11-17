@@ -11,12 +11,19 @@ jobs:
         uses: actions/checkout@v5
       - name: install nodejs
         uses: actions/setup-node@v6
+        with:
+          node-version: 20
       - name: install dependencies
         run: npm ci
       - name: uitvoering van tests
         run: npm test
       - name: generaties van een test coverage rapport
         run: npm test --coverage
+      - name : make an artifact from coverage rapport
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverageRapport
+          path: coverage/
         
       
     
