@@ -1,0 +1,104 @@
+name: discord ci
+
+on:
+  push:
+    branches:
+      - main        # runs bij elke push naar main
+      - '**'        # ook op andere branches (maar zonder notificaties)
+  pull_request:
+    branches:
+      - main        # PRs die naar main gaan
+
+jobs:
+  firstjob:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v5
+
+      - name: install nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: install dependencies
+        run: npm install
+
+      - name: uitvoering van tests
+        run: npm test
+
+      - name: generaties van een test coverage rapport
+        run: npm test -- --coverage
+
+      - name: ls files
+        run: ls
+
+      - name: make an artifact from coverage rapport
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverageRapport
+          path: coverage/
+
+      # -----------------------------
+      # Push -> main notificaties
+      # -----------------------------
+      - name: discord notify succes (push main)
+        if: ${{ success() && github.event_name == 'push' && github.ref_name == 'main' }}
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          content: "✅ Build geslaagd op main (push) voor commit `${{ github.sha }}`"
+
+      - name: discord notify failure push naar main
+        if: ${{ failure() && github.event_name == 'push' && github.ref_name == 'main' }}
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          content: "❌ Build gefaald op main (push) voor commit `${{ github.sha }}`"
+
+      # -----------------------------
+      # PR -> main notificaties (alleen open PRs)
+      # -----------------------------
+      - name: discord notify failure PR
+        if: ${{ failure()
+                && github.event_name == 'pull_request'
+                && github.base_ref == 'main'
+                && github.event.pull_request.state == 'open' }}
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          content: "❌ PR build gefaald voor PR #${{ github.event.pull_request.number }}"
+
+      - name: discord notify succes PR
+        if: ${{ success()
+                && github.event_name == 'pull_request'
+                && github.base_ref == 'main'
+                && github.event.pull_request.state == 'open' }}
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          content: "✅ PR build geslaagd voor PR #${{ github.event.pull_request.number }}"
+
+      # -----------------------------
+      # PR comment met build status + coverage info
+      # -----------------------------
+      - name: PR comment met build status en coverage
+        if: ${{ github.event_name == 'pull_request'
+                && github.base_ref == 'main'
+                && github.event.pull_request.state == 'open' }}
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ### CI status
+            - Status: **${{ job.status }}**
+            - Branch: `${{ github.head_ref }}`
+            - Coverage: coverage rapport gegenereerd in de `coverage/` map (artifact: `coverageRapport`)
+
+    
+    
+      
+      
+    
