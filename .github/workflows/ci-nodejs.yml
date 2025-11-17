@@ -18,7 +18,7 @@ jobs:
       - name: uitvoering van tests
         run: npm test
       - name: generaties van een test coverage rapport
-        run: npm test --coverage
+        run: npm test -- --coverage
       - name: ls files
         run: ls 
       - name : make an artifact from coverage rapport
