@@ -21,13 +21,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         
-      - name: Build and push
+        # MAIN BRANCH -> tag "latest"
+      - name: Build and push image (main -> latest)
         if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v6
         with:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/calculator-app:latest
 
+      # GIT TAGS -> tag met git tag-naam
+      - name: Build and push image (tag -> tag name)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/calculator-app:${{ github.ref_name }}
 
       
         
