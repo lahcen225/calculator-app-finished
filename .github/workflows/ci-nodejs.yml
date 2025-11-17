@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 20
       - name: install dependencies
-        run: npm ci
+        run: npm install
       - name: uitvoering van tests
         run: npm test
       - name: generaties van een test coverage rapport
