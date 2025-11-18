@@ -56,13 +56,13 @@ jobs:
 
       - name: install dependencies
         run: npm install
+        
       - name: es lint
         run: npm run lint
+        
       - name: pretier code
         run: npm run format:check
-      - name: fix bug
-        if: failed()
-        run: npm prettier --write
+
       
       - name: secrutiy check
         run: npm audit
