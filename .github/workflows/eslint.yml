@@ -1,6 +1,7 @@
 name: eslint ci
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main        # runs bij elke push naar main
@@ -8,6 +9,7 @@ on:
   pull_request:
     branches:
       - main        # PRs die naar main gaan
+    
 
 jobs:
   firstjob:
