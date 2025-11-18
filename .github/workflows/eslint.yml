@@ -1,0 +1,64 @@
+name: eslint ci
+
+on:
+  push:
+    branches:
+      - main        # runs bij elke push naar main
+      - '**'        # ook op andere branches (maar zonder notificaties)
+  pull_request:
+    branches:
+      - main        # PRs die naar main gaan
+
+jobs:
+  firstjob:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v5
+
+      - name: install nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: install dependencies
+        run: npm install
+
+      - name: uitvoering van tests
+        run: npm test
+
+      - name: generaties van een test coverage rapport
+        run: npm test -- --coverage
+
+      - name: ls files
+        run: ls
+
+      - name: make an artifact from coverage rapport
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverageRapport
+          path: coverage/
+
+  code-qaulity:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v5
+
+      - name: install nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: install dependencies
+        run: npm install
+      - name: es lint
+        run: npm run lint
+      - name: pretier code
+        run: npm run format:check
+      - name: secrutiy check
+        run: npm audit
+
+    
