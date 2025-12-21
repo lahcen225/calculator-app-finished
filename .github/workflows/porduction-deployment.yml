@@ -1,0 +1,22 @@
+name: deploy production ec2
+on: 
+  workflow_dispatch
+jobs:
+  firstjob:
+    runs-on: ubuntu-latest
+    steps:
+      - name : execute remote ssh commands using password
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{secrets.PROD_IP}}
+          username: ubuntu
+          key: ${{secrets.SSH_KEY}}
+      - name: pulling docker image
+        run: docker pull lahcen225/calculator-app:latest
+      - name: stop any running containers
+        run: |
+          docker stop $(docker ps -q) || true
+          docker rm calculator-app || true
+      - name: run the container
+        run: docker run -d -p 80:3000 --name calculator-app lahcen225/calculator-app:latest
+          
