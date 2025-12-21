@@ -9,7 +9,7 @@ jobs:
       - name: docker pull image
         run: docker pull lahcen225/calculator-app:latest
       - name: stop any running container
-        run: docker stop $(docker ps -q)
+        run: docker stop $(docker ps -q) || true
       - name: run docker container
         run: docker run -d  -p 3000:8080 --name calculater-app lahcen225/calculator-app:latest
         
