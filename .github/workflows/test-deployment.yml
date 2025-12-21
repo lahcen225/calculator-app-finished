@@ -11,5 +11,5 @@ jobs:
       - name: stop any running container
         run: docker stop $(docker ps -q) || true
       - name: run docker container
-        run: docker run -d  -p 3000:3000 --name calculater-app lahcen225/calculator-app:latest
+        run: docker run -d  -p 8080:3000 --name calculater-app lahcen225/calculator-app:latest
         
