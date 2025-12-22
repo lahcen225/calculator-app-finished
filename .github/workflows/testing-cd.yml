@@ -24,6 +24,7 @@ jobs:
           npx playwright test e2e/pxl-sidin.spec.js
 
       - name: Archive test reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
