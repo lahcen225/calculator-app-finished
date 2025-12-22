@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: fetching the code
-        uses: actions/checkout@v4
+        uses: actions/checkout@master
 
       - name: run intergration test
-        uses: matt-ball/newman-action@v1
+        uses: matt-ball/newman-action@master
         with:
           collection: api-testcollection-devops.postman_collection.json
           reporters: junit
