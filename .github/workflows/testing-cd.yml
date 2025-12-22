@@ -1,0 +1,32 @@
+name : testin cd playwright e2e
+on:
+  workflow_dispatch:
+
+jobs:
+  testingjob:
+    runs-on: ubuntu-latest
+    steps:
+      - name: fetching the code
+        uses: actions/checkout@v4
+
+      - name: run intergration test
+        uses: matt-ball/newman-action@v1
+        with:
+          collection: api-testcollection-devops.postman_collection.json
+          reporters: junit
+          reporter-junit-export: newman-report.xml
+
+        #gebruik geen npm init playwright@latest maar npm ci want het zit al in de nodemodules
+      - name: run e2e tests
+        run: |
+          npm ci
+          npx playwright install-deps 
+          npx playwright test e2e/pxl-sidin.spec.js
+
+      - name: Archive test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            newman-report.xml
+            playwright-report
