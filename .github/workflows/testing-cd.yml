@@ -16,6 +16,14 @@ jobs:
           reporters: '["junit"]'
           reporter: '{"junit":{"export":"newman-report.xml"}}'
 
+      
+      - name: Publish integration test results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Integration Tests (Postman)
+          path: newman-report.xml
+          reporter: java-junit
 
         #gebruik geen npm init playwright@latest maar npm ci want het zit al in de nodemodules
       - name: Run end-to-end tests
