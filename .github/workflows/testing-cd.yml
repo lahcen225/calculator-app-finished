@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@master
         
       - name: Run Postman integration tests with Newman
-        uses: anthonyvscode/newman-action@v1.0.3
+        uses: anthonyvscode/newman-action@master
         with:
           collection: ./api-testcollection.postman_collection.json
           reporters: cli,junit
