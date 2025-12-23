@@ -13,7 +13,7 @@ jobs:
         uses: matt-ball/newman-action@master
         with:
           collection: api-testcollection-devops.postman_collection.json
-          reporters: junit
+          reporters: '["junit"]'
 
         #gebruik geen npm init playwright@latest maar npm ci want het zit al in de nodemodules
       - name: Run end-to-end tests
