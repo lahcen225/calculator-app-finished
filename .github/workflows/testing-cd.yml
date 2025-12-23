@@ -14,11 +14,6 @@ jobs:
         with:
           collection: api-testcollection-devops.postman_collection.json
           reporters: junit
-          reporter:
-            junit:
-              export: newman-report.xml
-
-
 
         #gebruik geen npm init playwright@latest maar npm ci want het zit al in de nodemodules
       - name: Run end-to-end tests
