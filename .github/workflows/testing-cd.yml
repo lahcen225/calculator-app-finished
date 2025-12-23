@@ -8,13 +8,14 @@ jobs:
     steps:
       - name: fetching the code
         uses: actions/checkout@master
-
-      - name: Run integration tests (Postman / Newman)
+        
+      - name: Run integration tests
         uses: matt-ball/newman-action@master
         with:
           collection: api-testcollection-devops.postman_collection.json
           reporters: junit
-          extraArgs: --reporter-junit-export newman-report.xml
+          reporter: |
+            junit-export=newman-report.xml
 
 
         #gebruik geen npm init playwright@latest maar npm ci want het zit al in de nodemodules
